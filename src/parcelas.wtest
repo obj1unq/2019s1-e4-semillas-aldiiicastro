@@ -1,0 +1,119 @@
+import parcelas.*
+import semillas.*
+describe "Test Parcelas" {
+	//PARCELAS
+	const parcela = new Parcela(ancho = 20, largo = 1, horasDeSol = 8)
+	const parcela1 = new Parcela(ancho = 20, largo = 1, horasDeSol =10)
+	const parcelaEcologica = new ParcelaEcologica(ancho = 10, largo = 2, horasDeSol=6)
+	const parcelaIndustrial = new ParcelaIndustrial(ancho= 5, largo=2, horasDeSol=9)
+	//SOJAS
+	const soja1 = new Soja(altura = 1.2)
+	const soja2 = new Soja(altura = 1.1)
+	const soja3 = new Soja(altura = 1.3)
+	const soja4 = new Soja(altura = 1.5)
+	const soja5 = new Soja(altura = 2)
+	const soja6 = new Soja(altura = 0.4)
+	const soja7 = new Soja(altura = 0.8)
+	
+	//MENTAS
+	const menta =new Menta(altura = 1)
+	
+	//QUINOAS
+	const quinoa = new Quinoa(toleranciaAlSol = 12, anioDeObtencion = 2010) 
+	const quinoa1 = new Quinoa(toleranciaAlSol = 3, anioDeObtencion = 2010)
+	//HIERBABUENAS
+	const hierbabuena =new Hierbabuena(altura = 0.3)
+	
+	//SOJAS TRANGENICAS
+	const sojaTrangenica = new SojaTrangenica(anioDeObtencion=2009, altura = 1.2)
+	
+	fixture {
+		parcela.plantar(soja1)
+		parcela.plantar(soja2)
+		parcela.plantar(soja3)
+		parcela.plantar(soja4)
+		parcela1.plantar(soja1)
+		parcela1.plantar(soja2)
+		parcela1.plantar(soja3)
+		parcela1.plantar(quinoa)
+	}
+	
+	//PRUEBA DE SUPERFICIE Y CANTIDAD MAXIMA DE PLANTAS
+	test "parcela de 20x1 con 8 horas de sol tiene una superficie de 20m2 y tolera 4 plantas" {
+		assert.equals(20, parcela.superficie())
+		assert.equals(4, parcela.cantidadMaximaDePlantas())
+	}
+	
+	//PRUEBA DE TIENE COMPLICACIONES
+	test "parcela no tiene complicaciones con 4 plantas de soja de mas de 1 metro de altura " {
+		assert.notThat(parcela.tieneComplicaciones())
+	}
+	
+	test "parcela tiene complicaciones con 3 plantas de soja de mas de 1 metro de altura y la quinoa" {
+		assert.that(parcela1.tieneComplicaciones())
+	}
+	
+	//PRUEBA DE PLANTAR 
+	test "si se agrega una quinta planta a la parcela nos da error" {
+		assert.throwsExceptionWithMessage("No se puede plantar", {parcela.plantar(soja5)})
+	}
+	
+	//PRUEBA DE ES IDEAL (PARCELA)
+	test "esta parcela no es ideal para la sojaTrangenica" {
+		assert.notThat(sojaTrangenica.esIdeal(parcela))
+	}
+	
+	test "esta parcela es ideal para la menta y la hierbabuena" {
+		assert.that(menta.esIdeal(parcela))
+		assert.that(hierbabuena.esIdeal(parcela))
+	}
+	
+	test "esta parcela no es ideal para la quinoa porque soja4 mide 1.4m" {
+		assert.notThat(quinoa.esIdeal(parcela))
+	}
+	
+	test "esta parcela no es ideal para ninguna soja(tamaño 0.4, 0.8 y 2 metros)" {
+		assert.notThat(soja5.esIdeal(parcela))
+		assert.notThat(soja6.esIdeal(parcela))
+		assert.notThat(soja7.esIdeal(parcela))
+	}
+	
+	//PRUEBA DE SE ASOCIA BIEN CON PARCELA ECOLOGICA
+	test "la soja6 no se asocia bien a esta parcelaEcologica porque tieneComplicaciones" {
+		assert.that(parcelaEcologica.seAsociaBien(soja6))
+	}
+	
+	test "la quinoa1 se asocia bien a esta parcelaEcologica" {
+		parcelaEcologica.plantar(soja1)
+		assert.that(parcelaEcologica.seAsociaBien(quinoa1))
+	}
+	
+	test "la menta y la hierbabuena se asocia bien a esta parcelaEcologica" {
+		assert.that(parcelaEcologica.seAsociaBien(menta))
+		assert.that(parcelaEcologica.seAsociaBien(hierbabuena))
+	}
+	
+	test "la sojaTrangenica no se asocia bien a esta parcelaEcologica" {
+		assert.notThat(parcelaEcologica.seAsociaBien(sojaTrangenica))
+	}
+	
+	//PRUEBA DE SE ASOCIA BIEN CON PARCELA INDUSTRIAL
+	test "la quinoa se asocia bien a esta parcelaIndustrial" {
+		assert.that(parcelaIndustrial.seAsociaBien(quinoa))
+	}
+	
+	test "la soja5, soja6, soja7 no se asocia bien a esta parcela industrial" {
+		assert.notThat(parcelaIndustrial.seAsociaBien(soja5))
+		assert.notThat(parcelaIndustrial.seAsociaBien(soja6))
+		assert.notThat(parcelaIndustrial.seAsociaBien(soja7))
+	}
+	
+	test "la menta y la hierbabuna no se asocia bien a esta parcela Industrial" {
+		assert.notThat(parcelaIndustrial.seAsociaBien(menta))
+		assert.notThat(parcelaIndustrial.seAsociaBien(hierbabuena))
+	}
+	
+	test "la sojaTrangenica no se asocia bien a esta parcelaIndustrial" {
+		assert.notThat(parcelaIndustrial.seAsociaBien(sojaTrangenica))
+	}
+}

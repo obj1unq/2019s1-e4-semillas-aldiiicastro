@@ -1,0 +1,61 @@
+import inta.*
+import parcelas.*
+import semillas.*
+describe "Test de Inta" {
+	//PARCELAS
+	const parcelaEcologica = new ParcelaEcologica(ancho = 10, largo = 2, horasDeSol=6)
+	const parcelaIndustrial = new ParcelaIndustrial(ancho= 5, largo=2, horasDeSol=9)
+	const parcelaIndustrial2= new ParcelaIndustrial(ancho=3, largo=4, horasDeSol=10)
+	
+	//SOJAS
+	const soja3 = new Soja(altura = 0.8)
+	
+	//MENTAS
+	const menta =new Menta(altura = 1)
+	
+	//QUINOAS
+	const quinoa = new Quinoa(toleranciaAlSol = 12, anioDeObtencion = 2010) 
+	const quinoa1 = new Quinoa(toleranciaAlSol = 3, anioDeObtencion = 2010)
+	
+	//HIERBABUENAS
+	const hierbabuena =new Hierbabuena(altura = 0.3)
+	
+	//SOJAS TRANGENICAS
+	const sojaTrangenica = new SojaTrangenica(anioDeObtencion=2009, altura = 1.2)
+	
+	fixture {
+	 	parcelaEcologica.plantar(menta)
+		parcelaEcologica.plantar(soja3)
+		parcelaEcologica.plantar(sojaTrangenica)
+		parcelaEcologica.plantar(quinoa1)
+		parcelaIndustrial.plantar(quinoa)
+		parcelaIndustrial.plantar(quinoa)	
+		parcelaIndustrial2.plantar(quinoa)
+		parcelaIndustrial2.plantar(hierbabuena)
+		parcelaIndustrial2.plantar(sojaTrangenica)
+		inta.agregar(parcelaEcologica)
+		inta.agregar(parcelaIndustrial)
+		inta.agregar(parcelaIndustrial2)
+	}
+	
+	test "hay un promedio de 3 plantas por parcela" {
+		assert.equals(3, inta.promedioDePlantasPorParcela())
+	}
+	
+	test "la parcela mas autosustentable es la parcelaEcologica" {
+		assert.equals(parcelaIndustrial2, inta.parcelaMasAutosustentable()) //Porque es la unica con mas de 4 plantas, si bien ninguna de sus plantas se asocia.
+	}
+	
+	//PRUEBA DE SE ASOCIA BIEN CON PARCELA INDUSTRIAL2
+	test "la quinoa se asocia bien a esta parcelaIndustrial2" {
+		assert.notThat(parcelaIndustrial2.seAsociaBien(quinoa))
+	}
+	
+	test "la menta y la hierbabuna no se asocia bien a esta parcela Industrial2" {
+		assert.notThat(parcelaIndustrial2.seAsociaBien(hierbabuena))
+	}
+	
+	test "la sojaTrangenica no se asocia bien a esta parcelaIndustrial2" {
+		assert.notThat(parcelaIndustrial2.seAsociaBien(sojaTrangenica))
+	}
+}
