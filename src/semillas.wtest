@@ -1,0 +1,58 @@
+import semillas.*
+describe "Test de Plantas" {
+	
+	test "una menta de 1 metro da semillas y ocupa espacio de 3m2" {
+		const menta =new Menta(altura = 1)
+		assert.that(menta.daNuevasSemillas())
+		assert.equals(3, menta.espacioQueOcupa())
+	}
+	
+	test "una menta de 0.3 metros no da semillas y ocupa espacio de 0.9m2, no es fuerte" {
+		const menta =new Menta(altura = 0.3)
+		assert.notThat(menta.esFuerte())
+		assert.notThat(menta.daNuevasSemillas())
+		assert.equals(0.9, menta.espacioQueOcupa())
+	}
+	
+	test "una soja de 0.6 metros y de semilla de 2009, la planta tolera 7 horas de sol, no da semillas y ocupa 0.3m2" {
+		const soja = new Soja(anioDeObtencion=2009, altura = 0.6)
+		assert.notThat(soja.daNuevasSemillas())
+		assert.equals(0.3, soja.espacioQueOcupa())
+		assert.equals(7, soja.toleranciaAlSol())
+	}
+	
+	test "una soja de 1.2 metros y de semilla de 2009, la planta tolera 9 horas de sol, da semillas y ocupa 0.6m2" {
+		const soja = new Soja(anioDeObtencion=2009, altura = 1.2)
+		assert.that(soja.daNuevasSemillas())
+		assert.equals(0.6, soja.espacioQueOcupa())
+		assert.equals(9, soja.toleranciaAlSol())
+	}
+	
+	test "una quinoa que tolera 12 horas de sol y su semilla es de 2010, da semillas" {
+		const quinoa = new Quinoa(toleranciaAlSol = 12, anioDeObtencion = 2010) 
+		assert.that(quinoa.daNuevasSemillas())
+	}
+	
+	test "una quinoa que tolera 9 horas de sol y su semilla es de 2001, da semillas" {
+		const quinoa = new Quinoa(toleranciaAlSol = 9, anioDeObtencion = 2001) 
+		assert.that(quinoa.daNuevasSemillas())
+	}
+	
+	test "una quinoa que tolera 9 horas de sol y su semilla es de 26, no da semillas" {
+		const quinoa = new Quinoa(toleranciaAlSol = 9, anioDeObtencion = 2006) 
+		assert.notThat(quinoa.daNuevasSemillas())
+	}
+	
+	test "una soja trangenica de 1.2 metros y de semilla de 2009, la planta tolera 9 horas de sol, no da semillas y ocupa 0.6m2" {
+		const sojaTrangenica = new SojaTrangenica(anioDeObtencion=2009, altura = 1.2)
+		assert.notThat(sojaTrangenica.daNuevasSemillas())
+		assert.equals(0.6, sojaTrangenica.espacioQueOcupa())
+		assert.equals(9, sojaTrangenica.toleranciaAlSol())
+	}
+	
+	test "una hierbabuena de 0.3 metros no da semillas y ocupa espacio de 1.8m2" {
+		const hierbabuena =new Hierbabuena(altura = 0.3)
+		assert.notThat(hierbabuena.daNuevasSemillas())
+		assert.equals(1.8, hierbabuena.espacioQueOcupa())
+	}
+}
